@@ -45,6 +45,11 @@
             </div>
         </div>
         <modal-component id="modalMarca" titulo="Adicionar Marca">
+            <template v-slot:alertas>
+                <alert-component tipo="success" mensagem="Adicionado" v-if="transacaoStatus == 'Adicionado' "></alert-component>
+                <alert-component tipo="danger" mensagem="Erro, tente novamente mais tarde!" v-if="transacaoStatus == 'Erro'"></alert-component>
+            </template>
+
             <template v-slot:conteudo>
                 <div class="form-group">
                     <input-container-component titulo="Nome da Marca" id="novoNome" id-help="novoNomeHelp" texto-ajuda="Informe o nome da marca">
@@ -72,6 +77,7 @@
             return {
                 urlBase: 'http://localhost:8000/api/v1/marca',
                 nomeMarca: '',
+                transacaoStatus: '',
                 arquivoImagem: []
             }
         },
@@ -90,11 +96,11 @@
                     }
                 }
                 axios.post(this.urlBase, formData, config)
-                    .then(response => {
-                        console.log(response)
+                    .then(response => {     
+                        this.transacaoStatus = 'Adicionado'
                     })
                     .catch(errors => {
-                        console.log(errors)
+                        this.transacaoStatus = 'Erro'
                     })
             }
         }
